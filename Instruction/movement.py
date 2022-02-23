@@ -2,7 +2,7 @@ from enum import Enum
 from turtle import Turtle
 from typing import Union
 
-from instruction import Instruction
+from Instruction.instruction import Instruction
 
 MOVEMENT_TYPES = ["forward", "backward", "left", "right"]
 

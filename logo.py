@@ -2,10 +2,10 @@ import re
 import time
 import turtle
 
-from end import End
-from instruction import Instruction
-from movement import Movement
-from repeat import Repeat
+from Instruction.end import End
+from Instruction.instruction import Instruction
+from Instruction.movement import Movement
+from Instruction.repeat import Repeat
 
 
 MOVEMENT_PATTERN = r"(forward|backward|left|right)\s\d+"

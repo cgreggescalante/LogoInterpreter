@@ -1,6 +1,6 @@
 from turtle import Turtle
 
-from instruction import Instruction
+from Instruction.instruction import Instruction
 
 
 class End(Instruction):
