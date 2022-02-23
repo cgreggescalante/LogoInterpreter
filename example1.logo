@@ -1,0 +1,6 @@
+repeat 10
+repeat 2
+forward 20
+right 10
+end
+end
