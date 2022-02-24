@@ -1,6 +1,7 @@
-repeat 10
-repeat 2
+to func
+repeat
 forward 20
-right 10
+right 20
 end
 end
+func

@@ -1,20 +1,17 @@
 from turtle import Turtle
 
-from Instruction.instruction import Instruction
+from Instruction.subprocess import Subprocess
 
 
-class Repeat(Instruction):
-    instructions: list[Instruction]
+class Repeat(Subprocess):
     repeats: int
 
     def __init__(self, repeats: int):
         self.instructions = []
         self.repeats = repeats
 
-    def add_instruction(self, instruction: Instruction):
-        self.instructions.append(instruction)
-
     def execute(self, t: Turtle):
         for _ in range(self.repeats):
+            super().execute(t)
             for instruction in self.instructions:
                 instruction.execute(t)

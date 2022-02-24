@@ -3,6 +3,7 @@ import time
 import turtle
 
 from Instruction.end import End
+from Instruction.function import Function
 from Instruction.instruction import Instruction
 from Instruction.movement import Movement
 from Instruction.repeat import Repeat
@@ -10,17 +11,19 @@ from Instruction.repeat import Repeat
 
 MOVEMENT_PATTERN = r"(forward|backward|left|right)\s\d+"
 REPEAT_PATTERN = r"repeat\s\d+"
+FUNCTION_PATTERN = r"to\s[a-z]+"
 END_PATTERN = r"end"
 
 
 def parse_instruction(instruction: str) -> Instruction:
+    spl = instruction.split()
     if re.fullmatch(MOVEMENT_PATTERN, instruction):
-        spl = instruction.split()
         return Movement(spl[0], int(spl[1]))
-    if re.fullmatch(REPEAT_PATTERN, instruction):
-        spl = instruction.split()
+    elif re.fullmatch(REPEAT_PATTERN, instruction):
         return Repeat(int(spl[1]))
-    if re.fullmatch(END_PATTERN, instruction):
+    elif re.fullmatch(FUNCTION_PATTERN, instruction):
+        return Function(spl[1])
+    elif re.fullmatch(END_PATTERN, instruction):
         return End()
 
     raise ValueError(f"Instruction '{instruction}' not recognized.")
@@ -44,7 +47,7 @@ class Logo:
         with open(filename, 'r') as source:
             lines = list(map(lambda s: s.strip(), source.readlines()))
 
-        repeat_stack = []
+        sub_stack = []
 
         while lines:
             if lines[0]:
@@ -53,23 +56,23 @@ class Logo:
 
                 if not self.uses_turtle and isinstance(next_instruction, Movement):
                     self.uses_turtle = True
-                elif isinstance(next_instruction, Repeat):
-                    repeat_stack.append(next_instruction)
+                elif isinstance(next_instruction, Repeat) or isinstance(next_instruction, Function):
+                    sub_stack.append(next_instruction)
                     continue
 
-                if repeat_stack:
+                if sub_stack:
                     if isinstance(next_instruction, End):
-                        if len(repeat_stack) > 1:
-                            repeat_stack[-2].add_instruction(repeat_stack.pop())
+                        if len(sub_stack) > 1:
+                            sub_stack[-2].add_instruction(sub_stack.pop())
                         else:
-                            self.instructions.append(repeat_stack.pop())
+                            self.instructions.append(sub_stack.pop())
                     else:
-                        repeat_stack[-1].add_instruction(next_instruction)
+                        sub_stack[-1].add_instruction(next_instruction)
                 else:
                     self.instructions.append(next_instruction)
 
-        if repeat_stack:
-            raise ValueError(f"{len(repeat_stack)} loop(s) was not closed.")
+        if sub_stack:
+            raise ValueError(f"{len(sub_stack)} loop(s) was not closed.")
 
     def execute(self):
         if self.program_title:
