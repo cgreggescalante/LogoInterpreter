@@ -1,37 +1,20 @@
-import re
 import time
 import turtle
 
-from Instruction.end import End
 from Instruction.function import Function
 from Instruction.instruction import Instruction
-from Instruction.movement import Movement
-from Instruction.repeat import Repeat
-
-
-MOVEMENT_PATTERN = r"(forward|backward|left|right)\s\d+"
-REPEAT_PATTERN = r"repeat\s\d+"
-FUNCTION_PATTERN = r"to\s[a-z]+"
-END_PATTERN = r"end"
-
-
-def parse_instruction(instruction: str) -> Instruction:
-    spl = instruction.split()
-    if re.fullmatch(MOVEMENT_PATTERN, instruction):
-        return Movement(spl[0], int(spl[1]))
-    elif re.fullmatch(REPEAT_PATTERN, instruction):
-        return Repeat(int(spl[1]))
-    elif re.fullmatch(FUNCTION_PATTERN, instruction):
-        return Function(spl[1])
-    elif re.fullmatch(END_PATTERN, instruction):
-        return End()
-
-    raise ValueError(f"Instruction '{instruction}' not recognized.")
+from parse_instruction import parse_subprocess
 
 
 class Logo:
+    instructions: list[Instruction]
+    functions: dict[str, Function]
+    uses_turtle: bool
+    program_title: str
+
     def __init__(self):
-        self.instructions: list[Instruction] = []
+        self.instructions = []
+        self.functions = {}
         self.uses_turtle = False
         self.program_title = ""
 
@@ -47,40 +30,22 @@ class Logo:
         with open(filename, 'r') as source:
             lines = list(map(lambda s: s.strip(), source.readlines()))
 
-        sub_stack = []
+        self.compile_lines(lines)
 
-        while lines:
-            if lines[0]:
-                next_instruction = parse_instruction(lines.pop(0))
-                print(next_instruction)
+    def compile_lines(self, lines: list[str]) -> None:
+        # Filter out empty lines
+        lines = [a for a in lines if a]
 
-                if not self.uses_turtle and isinstance(next_instruction, Movement):
-                    self.uses_turtle = True
-                elif isinstance(next_instruction, Repeat) or isinstance(next_instruction, Function):
-                    sub_stack.append(next_instruction)
-                    continue
-
-                if sub_stack:
-                    if isinstance(next_instruction, End):
-                        if len(sub_stack) > 1:
-                            sub_stack[-2].add_instruction(sub_stack.pop())
-                        else:
-                            self.instructions.append(sub_stack.pop())
-                    else:
-                        sub_stack[-1].add_instruction(next_instruction)
-                else:
-                    self.instructions.append(next_instruction)
-
-        if sub_stack:
-            raise ValueError(f"{len(sub_stack)} loop(s) was not closed.")
+        self.instructions = parse_subprocess(lines, self.functions)
 
     def execute(self):
         if self.program_title:
             print(f"Executing {self.program_title}.")
-        if self.uses_turtle:
-            t = turtle.Turtle()
-        else:
-            t = None
+
+        t = turtle.Turtle()
+
+        print(self.functions['square'].instructions)
+        print(self.instructions)
 
         for instruction in self.instructions:
             instruction.execute(t)

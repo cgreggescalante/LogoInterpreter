@@ -13,5 +13,3 @@ class Repeat(Subprocess):
     def execute(self, t: Turtle):
         for _ in range(self.repeats):
             super().execute(t)
-            for instruction in self.instructions:
-                instruction.execute(t)

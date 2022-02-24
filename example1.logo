@@ -1,7 +1,12 @@
-to func
-repeat
-forward 20
-right 20
+to square
+    repeat 4
+        forward 50
+        right 90
+    end
+    right 10
+    forward 20
 end
+
+repeat 10
+    square
 end
-func
