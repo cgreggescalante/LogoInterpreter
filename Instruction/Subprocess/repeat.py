@@ -1,5 +1,4 @@
 from Instruction.Subprocess.subprocess import Subprocess
-from Instruction.instruction import Instruction
 from context import Context
 
 
@@ -7,6 +6,7 @@ class Repeat(Subprocess):
     repeats: int
 
     def __init__(self, repeats: int):
+        super().__init__()
         self.instructions = []
         self.repeats = repeats
 

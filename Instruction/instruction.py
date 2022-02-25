@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 
 
 class Instruction(ABC):
-    def __init__(self, instruction: str):
+    def __init__(self, instruction: str = None):
         pass
 
     @abstractmethod

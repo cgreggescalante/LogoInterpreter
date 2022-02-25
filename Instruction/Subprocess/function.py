@@ -11,6 +11,7 @@ class Function(Subprocess):
     name: str
 
     def __init__(self, name: str):
+        super().__init__()
         self.instructions = []
         self.required_variables = {}
         self.name = name

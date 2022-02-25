@@ -1,1 +1,2 @@
-repeat 4 [ fd 200 rt 10 ]
+repeat 36 [ fd 25 rt 10 fd 25 rt 10 ]
+clean

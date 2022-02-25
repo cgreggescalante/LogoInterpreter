@@ -1,5 +1,4 @@
 from enum import Enum
-from typing import Union
 
 from Instruction.instruction import Instruction
 from context import Context
@@ -14,7 +13,7 @@ class Direction(Enum):
 
 class Movement(Instruction):
     def __init__(self, direction: str, distance: str):
-        super().__init__("")
+        super().__init__()
         match direction:
             case "forward" | "fd":
                 self.direction = Direction.FORWARD

@@ -53,7 +53,6 @@ class Logo:
         self.context.set_screen(s)
 
         print(self.functions)
-        print(self.functions['square'].instructions)
         print(self.instructions)
 
         for instruction in self.instructions:
