@@ -3,6 +3,9 @@ LogoInterpreter
 
 A Python implementation of the [Logo](https://el.media.mit.edu/logo-foundation) language.
 
+## Use
+`python logo.py source.logo`
+
 ### Functions
 Definition
 `to foo :param1 :param2 ... end`
