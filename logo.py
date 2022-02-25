@@ -1,3 +1,4 @@
+import sys
 import time
 
 from Instruction.Subprocess.function import Function
@@ -54,6 +55,9 @@ class Logo:
 if __name__ == '__main__':
     logo = Logo()
 
-    logo.compile("examples/flower.logo")
+    if len(sys.argv) > 1:
+        logo.compile(sys.argv[1])
+    else:
+        logo.compile("examples/flower.logo")
 
     logo.execute()
