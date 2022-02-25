@@ -44,8 +44,7 @@ def parse_instruction(source: str, context: Context) -> Union[Instruction, tuple
 
     if term == "repeat":
         source, term = get_term(source)
-        count = int(term)
-        repeat = Repeat(count)
+        repeat = Repeat(term)
 
         source, term = get_term(source)
 
@@ -99,7 +98,7 @@ def parse_instruction(source: str, context: Context) -> Union[Instruction, tuple
             for _ in range(function.param_count()):
                 source, param = get_term(source)
                 params.append(param)
-            function.set_params(params)
+            function.set_params(params, context)
         if source:
             return function, source
         return function
@@ -108,9 +107,16 @@ def parse_instruction(source: str, context: Context) -> Union[Instruction, tuple
 
 
 def get_term(instruction: str) -> tuple[str, str]:
-    spc_index = instruction.find(" ")
-    if spc_index == -1:
+    if " " not in instruction:
         return "", instruction
+    spc_index = instruction.find(" ")
+    if instruction.startswith('"'):
+        while spc_index > -1 and instruction[spc_index - 1] == "\\":
+            spc_index = instruction.find(" ", spc_index + 1)
+        if spc_index == -1:
+            return "", instruction[1:].replace("\\", "")
+        else:
+            return instruction[spc_index + 1:], instruction[:spc_index].replace("\\", "")
     return instruction[spc_index + 1:], instruction[:spc_index]
 
 

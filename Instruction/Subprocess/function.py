@@ -25,9 +25,15 @@ class Function(Subprocess):
     def param_count(self) -> int:
         return len(self.required_variables)
 
-    def set_params(self, values: list[any]) -> None:
-        if len(values) == len(self.variable_values) and all(values):
-            self.variable_values = values
+    def set_params(self, values: list[any], context) -> None:
+        if len(values) == len(self.variable_values):
+            evaluated = []
+            for v in values:
+                if v.startswith(":"):
+                    evaluated.append(context.variables[v])
+                else:
+                    evaluated.append(v)
+            self.variable_values = evaluated
         else:
             raise ValueError(f"Missing required input. Call to '{self.name}' requires {len(self.required_variables)} inputs, {', '.join(self.required_variables)}")
 

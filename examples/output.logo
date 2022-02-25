@@ -1,3 +1,7 @@
-:cake 10
+to printn :n :m repeat :n [ print :m ] end
 
-print :cake
+:cake-msg "cake\ is\ great\ for\ the\ whole\ family
+
+printn 10 :cake-msg
+
+
