@@ -29,7 +29,7 @@ class Function(Subprocess):
         if len(values) == len(self.variable_values) and all(values):
             self.variable_values = values
         else:
-            raise ValueError("Missing required input")
+            raise ValueError(f"Missing required input. Call to '{self.name}' requires {len(self.required_variables)} inputs, {', '.join(self.required_variables)}")
 
     def execute(self, context) -> None:
         for name, value in zip(self.required_variables, self.variable_values):
