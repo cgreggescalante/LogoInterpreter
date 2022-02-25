@@ -40,7 +40,7 @@ class Logo:
         # Filter out empty lines
         lines = [a for a in lines if a]
 
-        self.instructions = parse_subprocess(lines, self.context)
+        self.instructions, self.functions = parse_subprocess(lines, self.context)
 
     def execute(self):
         if self.program_title:
@@ -52,6 +52,7 @@ class Logo:
         self.context.set_turtle(t)
         self.context.set_screen(s)
 
+        print(self.functions)
         print(self.functions['square'].instructions)
         print(self.instructions)
 

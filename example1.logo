@@ -7,6 +7,8 @@ to square
     forward 20
 end
 
-repeat 10
+repeat 4
     square
 end
+
+clean

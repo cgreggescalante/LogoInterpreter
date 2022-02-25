@@ -2,6 +2,8 @@ from abc import ABC, abstractmethod
 
 
 class Instruction(ABC):
+    def __init__(self, instruction: str):
+        pass
 
     @abstractmethod
     def execute(self, context) -> None:
