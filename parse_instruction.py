@@ -2,7 +2,6 @@ from typing import Union
 
 from Instruction.Subprocess.function import Function
 from Instruction.Subprocess.repeat import Repeat
-from Instruction.end import End
 from Instruction.instruction import Instruction
 from Instruction.movement import Movement
 from Instruction.random import Random
@@ -10,7 +9,6 @@ from Instruction.turtle_config import TurtleConfig
 from context import Context
 
 ZERO_ARG = {
-    "end": End,
     "set-random-position": Random,
     "showturtle": TurtleConfig,
     "st": TurtleConfig,

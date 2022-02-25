@@ -1,5 +1,4 @@
 import time
-import turtle
 
 from Instruction.Subprocess.function import Function
 from Instruction.instruction import Instruction
@@ -55,6 +54,6 @@ class Logo:
 if __name__ == '__main__':
     logo = Logo()
 
-    logo.compile("example1.logo")
+    logo.compile("examples/rectangle.logo")
 
     logo.execute()
