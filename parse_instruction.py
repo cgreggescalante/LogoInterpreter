@@ -1,21 +1,16 @@
-import re
 from typing import Union
 
-from Instruction.end import End
 from Instruction.Subprocess.function import Function
-from Instruction.instruction import Instruction
-from Instruction.movement import Movement
 from Instruction.Subprocess.repeat import Repeat
 from Instruction.Subprocess.subprocess import Subprocess
+from Instruction.end import End
+from Instruction.instruction import Instruction
+from Instruction.movement import Movement
 from Instruction.random import Random
 from Instruction.turtle_config import TurtleConfig
 from context import Context
 
-MOVEMENT_PATTERN = r"(forward|backward|left|right)\s\d+"
-REPEAT_PATTERN = r"repeat\s\d+"
-FUNCTION_PATTERN = r"to\s[a-z]+"
-CALL_PATTERN = r"[a-z]+"
-KEYWORDS = {
+ZERO_ARG = {
     "end": End,
     "set-random-position": Random,
     "showturtle": TurtleConfig,
@@ -31,22 +26,73 @@ KEYWORDS = {
     "fill": TurtleConfig
 }
 
+ONE_ARG = {
+    "forward": Movement,
+    "fd": Movement,
+    "backward": Movement,
+    "bk": Movement,
+    "left": Movement,
+    "lt": Movement,
+    "right": Movement,
+    "rt": Movement,
+}
 
-def parse_instruction(instruction: str, context: Context) -> Instruction:
-    instruction = instruction.strip()
-    spl = instruction.split()
-    if re.fullmatch(MOVEMENT_PATTERN, instruction):
-        return Movement(spl[0], int(spl[1]))
-    elif re.fullmatch(REPEAT_PATTERN, instruction):
-        return Repeat(int(spl[1]))
-    elif re.fullmatch(FUNCTION_PATTERN, instruction):
-        return Function(spl[1])
-    elif instruction in KEYWORDS:
-        return KEYWORDS[instruction](instruction)
-    elif re.fullmatch(CALL_PATTERN, instruction):
-        return context.get_function(instruction)
 
-    raise ValueError(f"Instruction '{instruction}' not recognized.")
+def parse_instruction(source: str, context: Context) -> Union[Instruction, tuple[Instruction, str]]:
+    source = source.strip()
+    source, term = get_term(source)
+
+    if term == "repeat":
+        source, term = get_term(source)
+        count = int(term)
+        repeat = Repeat(count)
+
+        source, term = get_term(source)
+
+        while source and not source.startswith("]"):
+            next_instruction, source = parse_instruction(source, context)
+            repeat.add_instruction(next_instruction)
+
+        if source == "]":
+            return repeat
+        return repeat, source
+
+    elif term == "to":
+        source, name = get_term(source)
+        function = Function(name)
+
+        source, current_term = get_term(source)
+
+        while current_term.startswith(":"):
+            function.add_required_input(current_term)
+            source, current_term = get_term(source)
+
+        while source and not source.startswith("end"):
+            next_instruction, source = parse_instruction(source, context)
+            function.add_instruction(next_instruction)
+
+        if source == "end":
+            return function
+
+    elif term in ZERO_ARG:
+        if source:
+            return ZERO_ARG[term](term), source
+        return ZERO_ARG[term](term)
+
+    elif term in ONE_ARG:
+        source, param = get_term(source)
+        if source:
+            return ONE_ARG[term](term, param), source
+        return ONE_ARG[term](term, param)
+
+    raise ValueError(f"Instruction '{term}' not recognized.")
+
+
+def get_term(instruction: str) -> tuple[str, str]:
+    spc_index = instruction.find(" ")
+    if spc_index == -1:
+        return "", instruction
+    return instruction[spc_index + 1:], instruction[:spc_index]
 
 
 def parse_subprocess(lines: list[str], context: Context, in_process: bool = False) \
@@ -56,19 +102,10 @@ def parse_subprocess(lines: list[str], context: Context, in_process: bool = Fals
 
     while lines:
         instruction = parse_instruction(lines.pop(0), context)
-        if isinstance(instruction, End):
-            return instructions
-        if isinstance(instruction, Subprocess):
+        if isinstance(instruction, Function):
             if instruction.definition:
-                instruction.instructions = parse_subprocess(lines, context, True)
                 instruction.definition = False
-                if isinstance(instruction, Function):
-                    functions[instruction.name] = instruction
-                    context.add_function(instruction)
-                else:
-                    instructions.append(instruction)
-            else:
-                instructions.append(instruction)
+                functions[instruction.name] = instruction
         else:
             instructions.append(instruction)
 
