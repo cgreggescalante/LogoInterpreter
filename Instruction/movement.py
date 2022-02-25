@@ -13,17 +13,18 @@ class Direction(Enum):
 
 
 class Movement(Instruction):
-    def __init__(self, direction: str, distance: Union[int, float]):
+    def __init__(self, direction: str, distance: str):
+        super().__init__("")
         match direction:
-            case "forward" | "f":
+            case "forward" | "fd":
                 self.direction = Direction.FORWARD
-            case "backward" | "b":
+            case "backward" | "bk":
                 self.direction = Direction.BACKWARD
-            case "left" | "l":
+            case "left" | "lt":
                 self.direction = Direction.LEFT
-            case "right" | "r":
+            case "right" | "rt":
                 self.direction = Direction.RIGHT
-        self.distance = distance
+        self.distance = float(distance)
 
     def execute(self, context: Context) -> None:
         match self.direction:
