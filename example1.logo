@@ -1,14 +1,1 @@
-to square
-    repeat 4
-        forward 50
-        right 90
-    end
-    right 10
-    forward 20
-end
-
-repeat 4
-    square
-end
-
-clean
+repeat 4 [ fd 200 rt 10 ]

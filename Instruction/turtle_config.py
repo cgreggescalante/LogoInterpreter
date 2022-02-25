@@ -40,6 +40,7 @@ class TurtleConfig(Instruction):
     option: TurtleConfigOption
 
     def __init__(self, option: str):
+        super().__init__(option)
         self.option = TurtleConfigOption.from_str(option)
 
     def execute(self, context: Context) -> None:
