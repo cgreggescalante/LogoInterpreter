@@ -1,3 +1,4 @@
+import turtle
 from turtle import Turtle, Screen
 from typing import Any, Union
 
@@ -13,8 +14,8 @@ class Context:
     def __init__(self):
         self.variables = {}
         self.functions = {}
-        self.turtle = None
-        self.screen = None
+        self.turtle = turtle.Turtle()
+        self.screen = turtle.Screen()
 
     def add_function(self, function: Subprocess) -> None:
         self.functions[function.name] = function

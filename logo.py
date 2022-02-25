@@ -46,15 +46,6 @@ class Logo:
         if self.program_title:
             print(f"Executing {self.program_title}.")
 
-        t = turtle.Turtle()
-        s = turtle.Screen()
-
-        self.context.set_turtle(t)
-        self.context.set_screen(s)
-
-        print(self.functions)
-        print(self.instructions)
-
         for instruction in self.instructions:
             instruction.execute(self.context)
 
