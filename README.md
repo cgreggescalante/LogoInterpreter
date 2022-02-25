@@ -3,19 +3,29 @@ LogoInterpreter
 
 A Python implementation of the [Logo](https://el.media.mit.edu/logo-foundation) language.
 
-## Basics
+### Functions
+Definition
+`to foo :param1 :param2 ... end`
 
-- Functions - to func_name ... end
-- Loops - repeat n ... end
-- Random - pick_random arr
-- Output - print variable
-- Mathematics 
-## Turtle Graphics
+Call
+`foo :param1 param2`
 
-### Movement
+### Repeat
+`repeat n [ ... ]`
+### Turtle
+`forward n` or `fd n`
 
-- Forward - forward, f
-- Backward - backward, b
-- Right - right, r
-- Left - left, l
-- 
+`backward n` or `bk n`
+
+`left n` or `lt n`
+
+`right n` or `rt n`
+
+### Output
+`print :val`
+### Variables
+Declaration
+`:var_name value`
+
+Reference
+`:var_name`
