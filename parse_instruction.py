@@ -40,6 +40,7 @@ ONE_ARG = {
 def parse_instruction(source: str, context: Context) -> Union[Instruction, tuple[Instruction, str]]:
     source = source.strip()
     source, term = get_term(source)
+    print(term)
 
     if term == "repeat":
         source, term = get_term(source)
@@ -71,6 +72,8 @@ def parse_instruction(source: str, context: Context) -> Union[Instruction, tuple
 
         if source == "end":
             return function
+        elif not source:
+            raise ValueError("Expected 'end' after function definition")
 
     elif term in ZERO_ARG:
         if source:
@@ -79,9 +82,7 @@ def parse_instruction(source: str, context: Context) -> Union[Instruction, tuple
 
     elif term in ONE_ARG:
         source, param = get_term(source)
-        if source:
-            return ONE_ARG[term](term, param), source
-        return ONE_ARG[term](term, param)
+        return ONE_ARG[term](term, param), source
 
     elif term in context.functions:
         function = context.functions[term]
