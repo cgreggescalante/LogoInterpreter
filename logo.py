@@ -1,18 +1,22 @@
 import time
 import turtle
 
-from Instruction.function import Function
+from Instruction.Subprocess.function import Function
 from Instruction.instruction import Instruction
+from context import Context
 from parse_instruction import parse_subprocess
 
 
 class Logo:
+    # TODO: create context variable for functions and variables
+    context: Context
     instructions: list[Instruction]
     functions: dict[str, Function]
     uses_turtle: bool
     program_title: str
 
     def __init__(self):
+        self.context = Context()
         self.instructions = []
         self.functions = {}
         self.uses_turtle = False
@@ -36,19 +40,23 @@ class Logo:
         # Filter out empty lines
         lines = [a for a in lines if a]
 
-        self.instructions = parse_subprocess(lines, self.functions)
+        self.instructions = parse_subprocess(lines, self.context)
 
     def execute(self):
         if self.program_title:
             print(f"Executing {self.program_title}.")
 
         t = turtle.Turtle()
+        s = turtle.Screen()
+
+        self.context.set_turtle(t)
+        self.context.set_screen(s)
 
         print(self.functions['square'].instructions)
         print(self.instructions)
 
         for instruction in self.instructions:
-            instruction.execute(t)
+            instruction.execute(self.context)
 
         time.sleep(10)
 

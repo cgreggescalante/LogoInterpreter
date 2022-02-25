@@ -1,10 +1,10 @@
 from abc import ABC, abstractmethod
-from tkinter import Canvas
-from turtle import Turtle
+
+from context import Context
 
 
 class Instruction(ABC):
 
     @abstractmethod
-    def execute(self, t: Turtle, s: Canvas):
+    def execute(self, context: Context) -> None:
         raise NotImplementedError("This method should be overridden by the implementing class.")

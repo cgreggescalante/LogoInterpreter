@@ -1,13 +1,11 @@
-from tkinter import Canvas
-from turtle import Turtle
-
 from Instruction.instruction import Instruction
+from context import Context
 
 
 class Subprocess(Instruction):
     instructions: list[Instruction]
     definition: bool = True
 
-    def execute(self, t: Turtle, c: Canvas) -> None:
+    def execute(self, context: Context) -> None:
         for instruction in self.instructions:
-            instruction.execute(t, c)
+            instruction.execute(context)

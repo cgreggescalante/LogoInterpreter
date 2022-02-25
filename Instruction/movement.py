@@ -1,9 +1,8 @@
 from enum import Enum
-from tkinter import Canvas
-from turtle import Turtle
 from typing import Union
 
 from Instruction.instruction import Instruction
+from context import Context
 
 
 class Direction(Enum):
@@ -26,13 +25,13 @@ class Movement(Instruction):
                 self.direction = Direction.RIGHT
         self.distance = distance
 
-    def execute(self, t: Turtle, c: Canvas) -> None:
+    def execute(self, context: Context) -> None:
         match self.direction:
             case Direction.FORWARD:
-                t.forward(self.distance)
+                context.turtle.forward(self.distance)
             case Direction.BACKWARD:
-                t.backward(self.distance)
+                context.turtle.backward(self.distance)
             case Direction.LEFT:
-                t.left(self.distance)
+                context.turtle.left(self.distance)
             case Direction.RIGHT:
-                t.right(self.distance)
+                context.turtle.right(self.distance)

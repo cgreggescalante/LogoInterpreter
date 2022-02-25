@@ -1,8 +1,9 @@
 from Instruction.instruction import Instruction
-from Instruction.subprocess import Subprocess
+from Instruction.Subprocess.subprocess import Subprocess
 
 
 class Function(Subprocess):
+    # TODO: function params
     instructions: list[Instruction]
     name: str
 
