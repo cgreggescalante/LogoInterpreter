@@ -33,5 +33,7 @@ class Function(Subprocess):
 
     def execute(self, context) -> None:
         for name, value in zip(self.required_variables, self.variable_values):
+            if isinstance(value, str) and value.startswith(":"):
+                continue
             context.variables[name] = value
         super().execute(context)
