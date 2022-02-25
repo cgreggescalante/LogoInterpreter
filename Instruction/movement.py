@@ -19,6 +19,7 @@ class Movement(Instruction):
 
     def __init__(self, direction: str, distance: str):
         super().__init__()
+
         match direction:
             case "forward" | "fd":
                 self.direction = Direction.FORWARD

@@ -5,7 +5,9 @@ from Instruction.Subprocess.repeat import Repeat
 from Instruction.instruction import Instruction
 from Instruction.movement import Movement
 from Instruction.random import Random
+from Instruction.print import Print
 from Instruction.turtle_config import TurtleConfig
+from Instruction.variable import Variable
 from context import Context
 
 ZERO_ARG = {
@@ -32,13 +34,13 @@ ONE_ARG = {
     "lt": Movement,
     "right": Movement,
     "rt": Movement,
+    "print": Print
 }
 
 
 def parse_instruction(source: str, context: Context) -> Union[Instruction, tuple[Instruction, str]]:
     source = source.strip()
     source, term = get_term(source)
-    print(term)
 
     if term == "repeat":
         source, term = get_term(source)
@@ -73,6 +75,12 @@ def parse_instruction(source: str, context: Context) -> Union[Instruction, tuple
         elif not source:
             raise ValueError("Expected 'end' after function definition")
 
+    elif term.startswith(":"):
+        source, param = get_term(source)
+        if source:
+            return Variable(term, param), source
+        return Variable(term, param)
+
     elif term in ZERO_ARG:
         if source:
             return ZERO_ARG[term](term), source
@@ -80,7 +88,9 @@ def parse_instruction(source: str, context: Context) -> Union[Instruction, tuple
 
     elif term in ONE_ARG:
         source, param = get_term(source)
-        return ONE_ARG[term](term, param), source
+        if source:
+            return ONE_ARG[term](term, param), source
+        return ONE_ARG[term](term, param)
 
     elif term in context.functions:
         function = context.functions[term]
@@ -116,6 +126,8 @@ def parse_subprocess(lines: list[str], context: Context, in_process: bool = Fals
                 instruction.definition = False
                 functions[instruction.name] = instruction
                 context.add_function(instruction)
+        elif isinstance(instruction, Variable):
+            context.variables[instruction.name] = instruction.value
         else:
             instructions.append(instruction)
     if in_process:

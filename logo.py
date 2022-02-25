@@ -54,6 +54,6 @@ class Logo:
 if __name__ == '__main__':
     logo = Logo()
 
-    logo.compile("examples/rectangle.logo")
+    logo.compile("examples/flower.logo")
 
     logo.execute()
