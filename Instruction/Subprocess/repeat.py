@@ -1,4 +1,5 @@
 from Instruction.Subprocess.subprocess import Subprocess
+from Instruction.instruction import Instruction
 from context import Context
 
 
