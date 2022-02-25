@@ -32,4 +32,6 @@ class Function(Subprocess):
             raise ValueError("Missing required input")
 
     def execute(self, context) -> None:
+        for name, value in zip(self.required_variables, self.variable_values):
+            context.variables[name] = value
         super().execute(context)
