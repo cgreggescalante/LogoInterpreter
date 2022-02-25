@@ -1,0 +1,3 @@
+to rectangle :height :width repeat 2 [ fd :width lt 90 fd :height lt 90 ] end
+
+rectangle 50 100
