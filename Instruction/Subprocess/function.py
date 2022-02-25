@@ -22,3 +22,4 @@ class Function(Subprocess):
     def execute(self, context) -> None:
         if None in self.required_variables.values():
             raise ValueError("Missing required input")
+        super().execute(context)

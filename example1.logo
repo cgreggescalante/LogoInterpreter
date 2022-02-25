@@ -1,2 +1,5 @@
-repeat 36 [ fd 25 rt 10 fd 25 rt 10 ]
-clean
+to square repeat 4 [ fd 50 rt 90 ] end
+to flower repeat 36 [ square lt 10 ] end
+
+hide
+flower

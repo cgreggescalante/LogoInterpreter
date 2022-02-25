@@ -53,19 +53,18 @@ def parse_instruction(source: str, context: Context) -> Union[Instruction, tuple
             next_instruction, source = parse_instruction(source, context)
             repeat.add_instruction(next_instruction)
 
-        if source == "]":
-            return repeat
-        return repeat, source
+        source = source[2:]
+        if source:
+            return repeat, source
+        return repeat
 
     elif term == "to":
         source, name = get_term(source)
         function = Function(name)
 
-        source, current_term = get_term(source)
-
-        while current_term.startswith(":"):
-            function.add_required_input(current_term)
+        while source.startswith(":"):
             source, current_term = get_term(source)
+            function.add_required_input(current_term)
 
         while source and not source.startswith("end"):
             next_instruction, source = parse_instruction(source, context)
@@ -85,6 +84,11 @@ def parse_instruction(source: str, context: Context) -> Union[Instruction, tuple
             return ONE_ARG[term](term, param), source
         return ONE_ARG[term](term, param)
 
+    elif term in context.functions:
+        if source:
+            return context.functions[term], source
+        return context.functions[term]
+
     raise ValueError(f"Instruction '{term}' not recognized.")
 
 
@@ -102,13 +106,13 @@ def parse_subprocess(lines: list[str], context: Context, in_process: bool = Fals
 
     while lines:
         instruction = parse_instruction(lines.pop(0), context)
-        if isinstance(instruction, Function):
+        if isinstance(instruction, Function) and instruction.definition:
             if instruction.definition:
                 instruction.definition = False
                 functions[instruction.name] = instruction
+                context.add_function(instruction)
         else:
             instructions.append(instruction)
-
     if in_process:
         raise ValueError("Loop not ended")
     else:
