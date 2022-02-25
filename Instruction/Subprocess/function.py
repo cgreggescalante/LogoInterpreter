@@ -7,19 +7,29 @@ from Instruction.Subprocess.subprocess import Subprocess
 class Function(Subprocess):
     # TODO: function params
     instructions: list[Instruction]
-    required_variables: dict[str, Any]
+    required_variables: list[str]
+    variable_values = list[Any]
     name: str
 
     def __init__(self, name: str):
         super().__init__()
         self.instructions = []
-        self.required_variables = {}
+        self.required_variables = []
+        self.variable_values = []
         self.name = name
 
-    def add_required_input(self, name):
-        self.required_variables[name] = None
+    def add_param(self, name: str, default: Any = None):
+        self.required_variables.append(name)
+        self.variable_values.append(default)
+
+    def param_count(self) -> int:
+        return len(self.required_variables)
+
+    def set_params(self, values: list[any]) -> None:
+        if len(values) == len(self.variable_values) and all(values):
+            self.variable_values = values
+        else:
+            raise ValueError("Missing required input")
 
     def execute(self, context) -> None:
-        if None in self.required_variables.values():
-            raise ValueError("Missing required input")
         super().execute(context)

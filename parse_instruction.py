@@ -2,7 +2,6 @@ from typing import Union
 
 from Instruction.Subprocess.function import Function
 from Instruction.Subprocess.repeat import Repeat
-from Instruction.Subprocess.subprocess import Subprocess
 from Instruction.end import End
 from Instruction.instruction import Instruction
 from Instruction.movement import Movement
@@ -64,7 +63,7 @@ def parse_instruction(source: str, context: Context) -> Union[Instruction, tuple
 
         while source.startswith(":"):
             source, current_term = get_term(source)
-            function.add_required_input(current_term)
+            function.add_param(current_term)
 
         while source and not source.startswith("end"):
             next_instruction, source = parse_instruction(source, context)
@@ -85,9 +84,16 @@ def parse_instruction(source: str, context: Context) -> Union[Instruction, tuple
         return ONE_ARG[term](term, param)
 
     elif term in context.functions:
+        function = context.functions[term]
+        if function.param_count():
+            params = []
+            for _ in range(function.param_count()):
+                source, param = get_term(source)
+                params.append(param)
+            function.set_params(params)
         if source:
-            return context.functions[term], source
-        return context.functions[term]
+            return function, source
+        return function
 
     raise ValueError(f"Instruction '{term}' not recognized.")
 

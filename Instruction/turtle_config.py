@@ -14,6 +14,9 @@ class TurtleConfigOption(Enum):
     WINDOW = 6
     FENCE = 7
     FILL = 8
+    PEN_DOWN = 9
+    PEN_UP = 10
+    PEN_PAINT = 11
 
     @staticmethod
     def from_str(label: str):

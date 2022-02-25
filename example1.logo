@@ -1,5 +1,6 @@
 to square repeat 4 [ fd 50 rt 90 ] end
-to flower repeat 36 [ square lt 10 ] end
+to flower :size repeat 18 [ square lt 20 ] end
 
-hide
-flower
+left 90
+forward 100
+flower 1
